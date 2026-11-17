@@ -1,0 +1,46 @@
+[
+  {
+    "condition": "A",
+    "task_id": "synthetic-1",
+    "seconds": 60,
+    "reviewer_hours": 0.01,
+    "correct": true,
+    "accepted": true,
+    "reproduced": true,
+    "failure_present": false,
+    "failure_detected": false
+  },
+  {
+    "condition": "B",
+    "task_id": "synthetic-1",
+    "seconds": 60,
+    "reviewer_hours": 0.01,
+    "correct": true,
+    "accepted": true,
+    "reproduced": true,
+    "failure_present": false,
+    "failure_detected": false
+  },
+  {
+    "condition": "C",
+    "task_id": "synthetic-1",
+    "seconds": 60,
+    "reviewer_hours": 0.01,
+    "correct": true,
+    "accepted": true,
+    "reproduced": true,
+    "failure_present": false,
+    "failure_detected": false
+  },
+  {
+    "condition": "D",
+    "task_id": "synthetic-1",
+    "seconds": 60,
+    "reviewer_hours": 0.01,
+    "correct": true,
+    "accepted": true,
+    "reproduced": true,
+    "failure_present": false,
+    "failure_detected": false
+  }
+]
