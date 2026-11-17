@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ResearchOS assurance record v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy",
+    "claim",
+    "metrics",
+    "ledger_valid",
+    "ledger_scope",
+    "ledger",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "policy": {
+      "type": "object"
+    },
+    "claim": {
+      "$ref": "#/$defs/claim"
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "ledger_valid": {
+      "type": "boolean"
+    },
+    "ledger_scope": {
+      "type": "string"
+    },
+    "ledger": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "seq",
+          "event",
+          "previous_hash",
+          "hash"
+        ],
+        "properties": {
+          "seq": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "event": {
+            "type": "object"
+          },
+          "previous_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "statement",
+        "provenance",
+        "critical",
+        "state",
+        "evidence",
+        "checks",
+        "dependencies",
+        "challenges",
+        "created_at",
+        "updated_at",
+        "last_validation_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "critical": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "GENERATED",
+            "UNVERIFIED",
+            "SUPPORTED",
+            "ADVERSARIAL_TEST",
+            "REPRODUCED",
+            "VALIDATED",
+            "STABLE",
+            "ASSURED",
+            "CONTESTED"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/check"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "challenges": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "last_validation_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "source_group",
+        "method",
+        "result",
+        "quality",
+        "reliability",
+        "independence",
+        "timestamp",
+        "actor"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_group": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "result": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timestamp": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quality": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reliability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "independence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "required": [
+        "kind",
+        "outcome",
+        "method",
+        "runner",
+        "source_group",
+        "actor",
+        "timestamp",
+        "version"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "validation",
+            "reproduction",
+            "adversarial"
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "UNCERTAIN"
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_group": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timestamp": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "adversarial"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "attack"
+            ],
+            "properties": {
+              "attack": {
+                "enum": [
+                  "contradiction",
+                  "assumption_violation",
+                  "source_poisoning"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
